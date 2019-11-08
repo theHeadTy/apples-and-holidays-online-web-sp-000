@@ -50,7 +50,7 @@ def all_supplies_in_holidays(hash)
   hash.each do |hkey, hvalue|
     puts "#{hkey.capitalize}:"
     hash[hkey].each do |k, vk|
-      puts "#{k.to_s.split(/ |\_/).map(&:capitalize).join(' ')}: #{vk.join(', ')}"
+      puts "  #{k.to_s.split(/ |\_/).map(&:capitalize).join(' ')}: #{vk.join(', ')}"
     end
   end
 end
