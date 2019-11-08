@@ -20,7 +20,7 @@ end
 
 def second_supply_for_fourth_of_july(supplies)
   supplies.dig(:summer, :fourth_of_july) << 'Watermelon'
-  supplies.dig(:summer, :fourth_of_july).rotate!
+  supplies.dig(:summer, :fourth_of_july).rotate!.first
 end
 
 def add_supply_to_winter_holidays(supplies, type)
