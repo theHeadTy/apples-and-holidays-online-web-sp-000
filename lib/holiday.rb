@@ -1,70 +1,89 @@
 require 'pry'
 
-def second_supply_for_fourth_of_july(holiday_hash)
-  # given that holiday_hash looks like this:
-  # {
-  #   :winter => {
-  #     :christmas => ["Lights", "Wreath"],
-  #     :new_years => ["Party Hats"]
-  #   },
-  #   :summer => {
-  #     :fourth_of_july => ["Fireworks", "BBQ"]
-  #   },
-  #   :fall => {
-  #     :thanksgiving => ["Turkey"]
-  #   },
-  #   :spring => {
-  #     :memorial_day => ["BBQ"]
-  #   }
-  # }
-  # return the second element in the 4th of July array
+def holiday_supplies_hash 
+  {
+    :winter => {
+      :christmas => ['Lights', 'Wreath'],
+      :new_years => ['Party Hats']
+    },
+    :summer => {
+      :fourth_of_july => ['Fireworks', 'BBQ']
+    },
+    :fall => {
+      :thanksgiving => ['Turkey']
+    },
+    :spring => {
+      :memorial_day => ['BBQ']
+    }
+  }
 end
 
-def add_supply_to_winter_holidays(holiday_hash, supply)
-  # holiday_hash is identical to the one above
-  # add the second argument, which is a supply, to BOTH the
-  # Christmas AND the New Year's arrays
-
+def second_supply_for_fourth_of_july(supplies)
+  supplies.dig(:summer, :fourth_of_july) << 'Watermelon'
+  supplies.dig(:summer, :fourth_of_july).rotate!.first
 end
 
-
-def add_supply_to_memorial_day(holiday_hash, supply)
-  # again, holiday_hash is the same as the ones above
-  # add the second argument to the memorial day array
-
+def add_supply_to_winter_holidays(supplies, type)
+  supplies.dig(:winter, :christmas) << type
+  supplies.dig(:winter, :new_years) << type
 end
 
-def add_new_holiday_with_supplies(holiday_hash, season, holiday_name, supply_array)
-  # code here
-  # remember to return the updated hash
-
+def add_supply_to_memorial_day(supplies, type)
+  supplies.dig(:spring, :memorial_day).clear << type
 end
 
-def all_winter_holiday_supplies(holiday_hash)
+# add_new_holiday_with_supplies(holiday_supplies, :winter, :valentines_day, valentines_day_supplies)
+def add_new_holiday_with_supplies(hash, season, holiday_name, supply_array)
+  hash.update({
+    season => {
+      holiday_name => supply_array
+    }
+  }).rehash
+end
+
+def all_winter_holiday_supplies(hash)
   # return an array of all of the supplies that are used in the winter season
-
+  hash[:winter].values.flatten
 end
 
-def all_supplies_in_holidays(holiday_hash)
-  # iterate through holiday_hash and print items such that your readout resembles:
-  # Winter:
-  #   Christmas: Lights, Wreath
-  #   New Years: Party Hats
-  # Summer:
-  #   Fourth Of July: Fireworks, BBQ
-  # etc.
-
+def all_supplies_in_holidays(hash)
+  hash.each do |hkey, hvalue|
+    puts "#{hkey.capitalize}:"
+    hash[hkey].each do |k, vk|
+      puts "  #{k.to_s.split(/ |\_/).map(&:capitalize).join(' ')}: #{vk.join(', ')}"
+    end
+  end
 end
 
-def all_holidays_with_bbq(holiday_hash)
-  # return an array of holiday names (as symbols) where supply lists
-  # include the string "BBQ"
-
+# hkey = winter/summer/fall/spring
+# hvalue = christmas => [] / fourth_of_july => []
+def all_holidays_with_bbq(hash)
+  arr = []
+  hash.each do |hkey, hval|
+    hash[hkey].map { |mk| arr << mk.first if hash[hkey][mk.first].index('BBQ') }
+    #hash[hkey].each { |mk|
+    #  if hash[hkey][mk[0]].index('BBQ')
+    #    arr << mk[0]
+    #  end
+    #}
+  end
+  arr
 end
 
 
+supplies = holiday_supplies_hash
+columbus_day_supplies = ["Flags", "Parade Floats", "Italian Food"]
+valentines_day_supplies = ["Cupid Cut-Out", "Candy Hearts"]
 
-
+second_supply_for_fourth_of_july(supplies)
+add_supply_to_winter_holidays(supplies, 'Balloons')
+add_supply_to_memorial_day(supplies, 'Grill')
+add_supply_to_memorial_day(supplies, 'Table Cloth')
+add_new_holiday_with_supplies(supplies, :fall, :columbus_day, columbus_day_supplies)
+add_new_holiday_with_supplies(supplies, :winter, :valentines_day, valentines_day_supplies)
+all_winter_holiday_supplies(supplies)
+all_supplies_in_holidays(supplies)
+all_holidays_with_bbq(supplies)
 
 
 
